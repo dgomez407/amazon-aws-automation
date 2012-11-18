@@ -10,9 +10,13 @@ import java.util.Map;
  * 
  * void createStackFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
  * void createStackText(String stackName, String templateBody, Map<String, Object> parameterValues)
- * String getStackTemplateBody(String stackName)
  * void deleteStack(String stackName)
  * List<String> getStartedStackNames()
+ * String getStackStatus(String stackName)
+ * Map<String, String> getStackOutputs(String stackName)
+ * List<String> getStackCapabilities(String stackName)
+ * Map<String, String> getStackResourceIds(String stackName) {
+ * String getStackTemplateBody(String stackName)
  * Map<String, String> getStackParameters(String stackName)
  * void updateStackParameters(String stackName, Map<String, Object> newParameterValues)
  * 
