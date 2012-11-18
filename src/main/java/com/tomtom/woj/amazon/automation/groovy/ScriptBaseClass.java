@@ -47,13 +47,13 @@ public abstract class ScriptBaseClass extends Script {
 		return slurper.parse(new FileReader(jsonFileName));
 	}
 	
-	public void createStackText(String stackName, String templateBody,
+	public void createStackFromText(String stackName, String templateBody,
 			Map<String, Object> parameterValues) {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
 		executor.createStack(stackName, templateBody, convertMapObjectToString(parameterValues));
 	}
 	
-	public void createStackFile(String stackName, String templateFileName,
+	public void createStackFromFile(String stackName, String templateFileName,
 			Map<String, Object> parameterValues) throws IOException {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
 		File templateFile = new File(templateFileName);

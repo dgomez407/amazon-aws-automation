@@ -5,8 +5,8 @@
  * void includeGroovyScript(String scriptFileName)
  * Object loadJsonFile(String jsonFileName)
  * 
- * void createStackFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
- * void createStackText(String stackName, String templateBody, Map<String, Object> parameterValues)
+ * void createStackFromFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
+ * void createStackFromText(String stackName, String templateBody, Map<String, Object> parameterValues)
  * void deleteStack(String stackName)
  * List<String> getStartedStackNames()
  * String getStackStatus(String stackName)
@@ -25,17 +25,20 @@ println 'script arguments: ' + args
 json = loadJsonFile('src/test/resources/json/example_json_file.json')
 println 'value of json_property: ' + json.json_property1
  
-loadAwsCredentialsFile('src/test/resources/credentials/example_credentials.txt')
-
 includeGroovyScript('src/test/resources/scripts/ExampleIncludedScript.groovy')
+
+loadAwsCredentialsFile('src/test/resources/credentials/example_credentials.txt')
 
 println 'list of stacks: ' + getStartedStackNames()
 
-stacksNames = ['HdtRegions', 'Initialize']
+stackNames = ['HdtRegions', 'Initialize']
 
 newProperties = ['ScalingDownAdjustment' : 30]
 
-for(stackName in stacksNames) {
+for(stackName in stackNames) {
 	println "processing stack: ${stackName} parameters: " + getStackParameters(stackName)
 	updateStackParameters(stackName, newProperties)
 }
+
+stackParameters = ['UserData':'some user data', 'AMIId':'ami-123456']
+createStackFromFile('testStack', 'src/test/resources/stack_templates/some_stack_template.json', stackParameters)
