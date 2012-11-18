@@ -17,14 +17,18 @@ import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.DeleteStackRequest;
+import com.amazonaws.services.cloudformation.model.DescribeStackResourcesRequest;
+import com.amazonaws.services.cloudformation.model.DescribeStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.DescribeStacksResult;
 import com.amazonaws.services.cloudformation.model.GetTemplateRequest;
 import com.amazonaws.services.cloudformation.model.GetTemplateResult;
 import com.amazonaws.services.cloudformation.model.ListStacksRequest;
 import com.amazonaws.services.cloudformation.model.ListStacksResult;
+import com.amazonaws.services.cloudformation.model.Output;
 import com.amazonaws.services.cloudformation.model.Parameter;
 import com.amazonaws.services.cloudformation.model.Stack;
+import com.amazonaws.services.cloudformation.model.StackResource;
 import com.amazonaws.services.cloudformation.model.StackSummary;
 import com.amazonaws.services.cloudformation.model.UpdateStackRequest;
 
@@ -138,6 +142,49 @@ public class AmazonStackOperations {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (Parameter parameter : parameters) {
 			map.put(parameter.getParameterKey(), parameter.getParameterValue());
+		}
+		return map;
+	}
+
+	public Map<String, String> getStackOutputs(String stackName) {
+		checkIfCredentialsFileIsSpecified();
+		
+		DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest();
+		describeStacksRequest.setStackName(stackName);
+		DescribeStacksResult describeStacksResult = client
+				.describeStacks(describeStacksRequest);
+		List<Stack> stacks = describeStacksResult.getStacks();
+		Stack stack = stacks.get(0);
+		List<Output> outputs = stack.getOutputs();
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (Output output : outputs) {
+			map.put(output.getOutputKey(), output.getOutputValue());
+		}
+		return map;
+	}
+
+	public List<String> getStackCapabilities(String stackName) {
+		checkIfCredentialsFileIsSpecified();
+		
+		DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest();
+		describeStacksRequest.setStackName(stackName);
+		DescribeStacksResult describeStacksResult = client
+				.describeStacks(describeStacksRequest);
+		List<Stack> stacks = describeStacksResult.getStacks();
+		Stack stack = stacks.get(0);
+		return stack.getCapabilities();
+	}
+
+	public Map<String, String> getStackResourceIds(String stackName) {
+		checkIfCredentialsFileIsSpecified();
+
+		DescribeStackResourcesRequest describeStackResourcesRequest = new DescribeStackResourcesRequest();
+		describeStackResourcesRequest.setStackName(stackName);
+		DescribeStackResourcesResult describeStackResourcesResult = client.describeStackResources(describeStackResourcesRequest);
+		List<StackResource> resources = describeStackResourcesResult.getStackResources();
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (StackResource resource : resources) {
+			map.put(resource.getLogicalResourceId(), resource.getPhysicalResourceId());
 		}
 		return map;
 	}

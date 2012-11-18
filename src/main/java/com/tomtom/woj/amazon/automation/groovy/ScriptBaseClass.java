@@ -65,6 +65,21 @@ public abstract class ScriptBaseClass extends Script {
 		return executor.getStackStatus(stackName);
 	}
 	
+	public Map<String, String> getStackOutputs(String stackName) {
+		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
+		return executor.getStackOutputs(stackName);
+	}
+	
+	public List<String> getStackCapabilities(String stackName) {
+		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
+		return executor.getStackCapabilities(stackName);
+	}
+	
+	public Map<String, String> getStackResourceIds(String stackName) {
+		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
+		return executor.getStackResourceIds(stackName);
+	}
+	
 	public String getStackTemplateBody(String stackName) {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
 		return executor.getStackTemplateBody(stackName);

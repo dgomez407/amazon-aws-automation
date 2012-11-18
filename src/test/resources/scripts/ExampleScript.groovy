@@ -18,6 +18,56 @@ import java.util.Map;
  * 
  */
 
+println getStackResourceIds('HdtRegions')
+
+exit
+
+//parameters = ['HealthCheck':'HTTP:8080/lbs-hdt-regions/services/hdtRegions/3/json?language=fr&projection=EPSG4326',
+//	 'UserData':'mascoma-warta-test-data http://s3.amazonaws.com/mascoma-services-static-prod/images/traffic/',
+//	 'AMIId':'ami-2c3b8245',
+//	 'SNSTopicAlarm' : 'arn:aws:sns:us-east-1:555835714806:alarms-test']
+//
+//createStackFile('testStack3', 'src/test/resources/stack_templates/example_stack_template.json', parameters)
+//
+//exit
+//
+//status = getStackStatus('testStack')
+//println 'stack status: ' + status
+//
+//exit
+
+//printMap(getStackParameters('HdtRegions'))
+//
+//println 'list of stack parameters HdtRegions: ' + getStackParameters('HdtRegions')
+//
+//println 'list of stacks: ' + getStartedStackNames()
+//
+//exit
+//
+//deleteStack('testStack')
+//
+//listStacks()
+//
+//deleteStack('testStack')
+//
+//exit
+//
+//deleteStack('testStack')
+
+//println listStackParameters('HdtRegions')
+//
+//body = getStackTemplateBody('HdtRegions')
+//
+//parameters = ['HealthCheck':'HTTP:8080/lbs-hdt-regions/services/hdtRegions/3/json?language=fr&projection=EPSG4326',
+//	 'UserData':'mascoma-warta-test-data http://s3.amazonaws.com/mascoma-services-static-prod/images/traffic/',
+//	 'AMIId':'ami-2c3b8245',
+//	 'SNSTopicAlarm' : 'arn:aws:sns:us-east-1:555835714806:alarms-test']
+//
+//createStackFromString('testStack', body, parameters)
+//
+//exit
+
+
 println 'script arguments: ' + args
 
 json = loadJsonFile('src/test/resources/json/example_json_file.json')
