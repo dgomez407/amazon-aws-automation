@@ -5,7 +5,8 @@
  * 
  * void includeGroovyScript(String scriptFileName)
  * 
- * void createStack(String stackName, String templateBody,	Map<String, Object> parameterValues)
+ * void createStackFromFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
+ * void createStackFromString(String stackName, String templateBody, Map<String, Object> parameterValues)
  * void deleteStack(String stackName)
  * void listStacks();
  * void listStackParameters(String stackName);

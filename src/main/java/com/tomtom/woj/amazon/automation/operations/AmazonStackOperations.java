@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
@@ -41,6 +43,12 @@ public class AmazonStackOperations {
 		client = new AmazonCloudFormationClient(credentials);
 	}
 
+	public void createStack(String stackName, File templateFile,
+			Map<String, String> parameterValues) throws IOException {
+		String templateBody = FileUtils.readFileToString(templateFile);
+		createStack(stackName, templateBody, parameterValues);
+	}
+	
 	public void createStack(String stackName, String templateBody,
 			Map<String, String> parameterValues) {
 		checkIfCredentialsFileIsSpecified();
