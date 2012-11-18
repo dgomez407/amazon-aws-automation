@@ -113,6 +113,7 @@ public class AmazonStackOperations {
 		
 		List<String> stackStatusFilters = new ArrayList<String>();
 		stackStatusFilters.add("UPDATE_COMPLETE");
+		stackStatusFilters.add("CREATE_COMPLETE");
 		ListStacksRequest listStacksRequest = new ListStacksRequest();
 		listStacksRequest.setStackStatusFilters(stackStatusFilters);
 		ListStacksResult result = client.listStacks(listStacksRequest);
