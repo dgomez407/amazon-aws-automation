@@ -193,10 +193,10 @@ public class AmazonStackOperations {
 	}
 
 	private AWSCredentials loadCredentials(String path) {
-		File fin = new File(path);
+		File credentialsFile = new File(path);
 		AWSCredentials creds = null;
 		try {
-			creds = new PropertiesCredentials(fin);
+			creds = new PropertiesCredentials(credentialsFile);
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalArgumentException e) {
