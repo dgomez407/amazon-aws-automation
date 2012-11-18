@@ -19,6 +19,10 @@ public class Main {
 		ArrayList<String> argsArray = new ArrayList<String>();
 		for(int i=1; i<args.length; i++) {
 			if("--credentials".equals(args[i])) {
+				if(args.length < i+2) {
+					System.err.println("Please provide the credentials file name");
+					System.exit(1);
+				}
 				awsCredentialsFileName = args[i+1];
 				i+=2;
 			} else {
