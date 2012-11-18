@@ -23,15 +23,21 @@ public class GroovyScriptExecutor {
 	public static void executeAmazonGroovyScript(
 			String awsCredentialsFileName, String scriptFileName, List<String> args)
 			throws IOException {
+		
+		Binding binding = new Binding();
+		
 		AmazonStackOperations amazonExecutor;
 		
+		// when credentials will be given from command line they will override credentials loaded from the script
+		// any attempt to load credentials from the script will be ignored
 		if(awsCredentialsFileName!=null) {
 			amazonExecutor = new AmazonStackOperations(awsCredentialsFileName);
+			binding.setProperty(ScriptBaseClass.IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME, true);
 		} else {
 			amazonExecutor = new AmazonStackOperations();
+			binding.setProperty(ScriptBaseClass.IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME, false);
 		}
 
-		Binding binding = new Binding();
 		binding.setProperty(ScriptBaseClass.AMAZON_EXECUTOR_PROPERTY_NAME, amazonExecutor);
 		binding.setVariable(ScriptBaseClass.ARGS_VARIABLE_NAME, args);
 		

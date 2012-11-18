@@ -3,8 +3,6 @@ package com.tomtom.woj.amazon.automation;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
-
 import com.tomtom.woj.amazon.automation.groovy.GroovyScriptExecutor;
 
 public class Main {
@@ -33,7 +31,9 @@ public class Main {
 
 	private static void displayHelp() {
 		System.out.println(
-				"Please provide at least the script name as a parameter. Credentials parameter is optional because you can load credentials from within the script\n" +
+				"Please provide at least the script name as a parameter. " +
+				"Credentials parameter is optional because you can load credentials from within the script. " +
+				"If you use command line credentials parameter it will override the credentials loaded from the script\n" +
 				"Usage:\n" +
 				"\tjava -jar amazon-aws-credentials-all SCRIPT_NAME [--credentials CREDENTIALS_FILE] [SCRITPT ARGS]");
 	}

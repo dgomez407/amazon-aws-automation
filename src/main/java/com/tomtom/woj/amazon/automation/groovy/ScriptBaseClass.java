@@ -20,6 +20,7 @@ public abstract class ScriptBaseClass extends Script {
 	public static final String AMAZON_EXECUTOR_PROPERTY_NAME = "amazonExecutor";
 	public static final String GROOVY_SHELL_PROPERTY_NAME = "shell";
 	public static final String ARGS_VARIABLE_NAME = "args";
+	public static final String IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME = "ignoreCredentialsCommand";
 	
 	public void includeGroovyScript(String scriptFileName) throws IOException {
 		GroovyShell groovyShell = (GroovyShell) getProperty(GROOVY_SHELL_PROPERTY_NAME);
@@ -33,6 +34,11 @@ public abstract class ScriptBaseClass extends Script {
 	}
 	
 	public void loadAwsCredentialsFile(String credentialsFileName) {
+		boolean ignoreCredentialsCommand = (Boolean) getProperty(IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME);
+		if(ignoreCredentialsCommand) {
+			System.out.println("ignored load credentials command");
+			return;
+		}
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
 		executor.loadAwsCredentialsFile(credentialsFileName);
 	}
