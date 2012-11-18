@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
@@ -29,7 +30,9 @@ import com.amazonaws.services.cloudformation.model.UpdateStackRequest;
 
 public class AmazonStackOperations {
 
-	private static AmazonCloudFormationClient client;
+	private static final int COMPLETE_OPERATION_WAITING_TIME_MS = 10000; 
+	
+	private AmazonCloudFormationClient client;
 
 	public AmazonStackOperations() {
 	}
@@ -69,16 +72,41 @@ public class AmazonStackOperations {
 		createStackRequest.setParameters(parameters);
 		client.createStack(createStackRequest);
 
-		// wait for operation to complete
-		waitForStackToCompleteTheUpdate(stackName);
+		waitForStackToCompleteTheOperation(stackName);
 	}
 
+	public String getStackStatus(String stackName) {
+		DescribeStacksRequest describeStacksRequest;
+		DescribeStacksResult describeStacksResult;
+		List<Stack> stacks;
+		Stack stack;
+		describeStacksRequest = new DescribeStacksRequest();
+		describeStacksRequest.setStackName(stackName);
+		describeStacksResult = client.describeStacks(describeStacksRequest);
+		stacks = describeStacksResult.getStacks();
+		stack = stacks.get(0);
+		return stack.getStackStatus();
+	}
+	
+	public String getStackTemplateBody(String stackName) {
+		checkIfCredentialsFileIsSpecified();
+
+		// get stack template body
+		GetTemplateRequest getTemplateRequest = new GetTemplateRequest();
+		getTemplateRequest.setStackName(stackName);
+		GetTemplateResult getTemplateResult = client
+				.getTemplate(getTemplateRequest);
+		return getTemplateResult.getTemplateBody();
+	}
+	
 	public void deleteStack(String stackName) {
 		checkIfCredentialsFileIsSpecified();
 		
 		DeleteStackRequest deleteStackRequest = new DeleteStackRequest();
 		deleteStackRequest.setStackName(stackName);
 		client.deleteStack(deleteStackRequest);
+		
+		waitForStackToCompleteTheOperation(stackName);
 	}
 
 	public List<String> getStartedStackNames() {
@@ -154,8 +182,7 @@ public class AmazonStackOperations {
 		updateStackRequest.setTemplateBody(templateBody);
 		client.updateStack(updateStackRequest);
 
-		// wait for operation to complete
-		waitForStackToCompleteTheUpdate(stackName);
+		waitForStackToCompleteTheOperation(stackName);
 	}
 
 	private void checkIfCredentialsFileIsSpecified() {
@@ -164,23 +191,29 @@ public class AmazonStackOperations {
 		}
 	}
 
-	private void waitForStackToCompleteTheUpdate(String stackName) {
-		DescribeStacksRequest describeStacksRequest;
-		DescribeStacksResult describeStacksResult;
+	private void waitForStackToCompleteTheOperation(String stackName) {
+		DescribeStacksRequest describeStacksRequest = null;
+		DescribeStacksResult describeStacksResult = null;
 		List<Stack> stacks;
 		Stack stack;
 		while (true) {
 			describeStacksRequest = new DescribeStacksRequest();
 			describeStacksRequest.setStackName(stackName);
-			describeStacksResult = client.describeStacks(describeStacksRequest);
+			try {
+				describeStacksResult = client.describeStacks(describeStacksRequest);
+			} catch (AmazonServiceException e) {
+				// swallow exception, the stack might not exist
+				System.err.println("this might be nothing wrong if deleting the stack");
+				e.printStackTrace();
+			}
 			stacks = describeStacksResult.getStacks();
 			stack = stacks.get(0);
-			if ("UPDATE_COMPLETE".equals(stack.getStackStatus())) {
+			if (stack.getStackStatus().endsWith("_COMPLETE")) {
 				break;
 			}
-			System.out.println("waiting for operation to complete");
+			System.out.println("operation status: " + stack.getStackStatus() + ", waiting for operation to complete");
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(COMPLETE_OPERATION_WAITING_TIME_MS);
 			} catch (InterruptedException e) {
 			}
 		}

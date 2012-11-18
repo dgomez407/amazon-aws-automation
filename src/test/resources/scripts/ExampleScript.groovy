@@ -7,6 +7,7 @@
  * 
  * void createStackFromFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
  * void createStackFromString(String stackName, String templateBody, Map<String, Object> parameterValues)
+ * String getStackTemplateBody(String stackName)
  * void deleteStack(String stackName)
  * void listStacks();
  * void listStackParameters(String stackName);
