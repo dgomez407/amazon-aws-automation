@@ -13,7 +13,7 @@ public class Main {
 			System.exit(1);
 		}
 		
-		String awsCredentialsFileName = null; //"src/test/resources/credentials/credentials_warta.txt";
+		String awsCredentialsFileName = null; //"src/test/resources/credentials/example_credentials.txt";
 		String scriptFileName = args[0]; //"src/test/resources/scripts/ExampleScript.groovy";
 		
 		ArrayList<String> argsArray = new ArrayList<String>();
@@ -30,12 +30,13 @@ public class Main {
 	 }
 
 	private static void displayHelp() {
-		System.out.println(
+		System.out.println("\n" +
 				"Please provide at least the script name as a parameter. " +
 				"Credentials parameter is optional because you can load credentials from within the script. " +
-				"If you use command line credentials parameter it will override the credentials loaded from the script\n" +
+				"If you use command line credentials parameter then it will override the credentials loaded from the script. " +
+				"You can pass the command line parameters to the script. They will be available in a list called args.\n\n" +
 				"Usage:\n" +
-				"\tjava -jar amazon-aws-credentials-all SCRIPT_NAME [--credentials CREDENTIALS_FILE] [SCRITPT ARGS]");
+				"\tjava -jar amazon-aws-automation-x.x.jar SCRIPT_NAME [--credentials CREDENTIALS_FILE] [SCRITPT ARGS]\n");
 	}
 
 }
