@@ -56,8 +56,6 @@ public class AmazonStackOperations {
 			Map<String, String> parameterValues) {
 		checkIfCredentialsFileIsSpecified();
 		
-		System.err.println("Never tested!");
-		
 		ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 		for (Entry<String, String> entry : parameterValues.entrySet()) {
 			Parameter parameter = new Parameter();
@@ -72,7 +70,7 @@ public class AmazonStackOperations {
 		createStackRequest.setParameters(parameters);
 		client.createStack(createStackRequest);
 
-		waitForStackToCompleteTheOperation(stackName);
+		waitForStackToCompleteTheOperation(stackName, false);
 	}
 
 	public String getStackStatus(String stackName) {
@@ -106,7 +104,8 @@ public class AmazonStackOperations {
 		deleteStackRequest.setStackName(stackName);
 		client.deleteStack(deleteStackRequest);
 		
-		waitForStackToCompleteTheOperation(stackName);
+		// wait to delete the stack (ignore error as stack might not exist after deleting)
+		waitForStackToCompleteTheOperation(stackName, true);
 	}
 
 	public List<String> getStartedStackNames() {
@@ -182,7 +181,7 @@ public class AmazonStackOperations {
 		updateStackRequest.setTemplateBody(templateBody);
 		client.updateStack(updateStackRequest);
 
-		waitForStackToCompleteTheOperation(stackName);
+		waitForStackToCompleteTheOperation(stackName, false);
 	}
 
 	private void checkIfCredentialsFileIsSpecified() {
@@ -191,20 +190,24 @@ public class AmazonStackOperations {
 		}
 	}
 
-	private void waitForStackToCompleteTheOperation(String stackName) {
+	private void waitForStackToCompleteTheOperation(String stackName, boolean ignoreError) {
 		DescribeStacksRequest describeStacksRequest = null;
 		DescribeStacksResult describeStacksResult = null;
 		List<Stack> stacks;
 		Stack stack;
+		describeStacksRequest = new DescribeStacksRequest();
+		describeStacksRequest.setStackName(stackName);
 		while (true) {
-			describeStacksRequest = new DescribeStacksRequest();
-			describeStacksRequest.setStackName(stackName);
 			try {
 				describeStacksResult = client.describeStacks(describeStacksRequest);
 			} catch (AmazonServiceException e) {
-				// swallow exception, the stack might not exist
-				System.err.println("this might be nothing wrong if deleting the stack");
-				e.printStackTrace();
+				if(!ignoreError) {
+					// swallow exception, the stack might not exist
+					e.printStackTrace();
+				} else {
+					// stack does not exist, deleting is finished
+					return;
+				}
 			}
 			stacks = describeStacksResult.getStacks();
 			stack = stacks.get(0);
