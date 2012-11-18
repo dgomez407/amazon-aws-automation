@@ -136,7 +136,6 @@ public class AmazonStackOperations {
 		Stack stack = stacks.get(0);
 		List<Parameter> parameters = stack.getParameters();
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		System.out.println("parameters of stack: " + stackName);
 		for (Parameter parameter : parameters) {
 			map.put(parameter.getParameterKey(), parameter.getParameterValue());
 		}
@@ -171,7 +170,7 @@ public class AmazonStackOperations {
 		}
 		
 		if(!updated) {
-			System.out.println("no parameters to update");
+			System.out.println("stack " + stackName + " no parameters to update");
 			return;
 		}
 
@@ -215,7 +214,7 @@ public class AmazonStackOperations {
 			if (stack.getStackStatus().endsWith("_COMPLETE")) {
 				break;
 			}
-			System.out.println("operation status: " + stack.getStackStatus() + ", waiting for operation to complete");
+			System.out.println("stack " + stackName + " operation status: " + stack.getStackStatus() + ", waiting for operation to complete");
 			try {
 				Thread.sleep(COMPLETE_OPERATION_WAITING_TIME_MS);
 			} catch (InterruptedException e) {

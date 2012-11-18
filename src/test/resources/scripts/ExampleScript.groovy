@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.Map;
+
 /**
  * available commands:
  * 
@@ -9,12 +12,12 @@
  * void createStackFromString(String stackName, String templateBody, Map<String, Object> parameterValues)
  * String getStackTemplateBody(String stackName)
  * void deleteStack(String stackName)
- * void listStacks();
- * void listStackParameters(String stackName);
- * void updateStackParameters(String stackName, Map<String, Object> newParameterValues);
+ * List<String> getStartedStackNames()
+ * Map<String, String> getStackParameters(String stackName)
+ * void updateStackParameters(String stackName, Map<String, Object> newParameterValues)
  * 
  */
-
+ 
 println 'script arguments: ' + args
 
 json = loadJsonFile('src/test/resources/json/example_json_file.json')
@@ -24,13 +27,14 @@ loadAwsCredentialsFile('src/test/resources/credentials/example_credentials.txt')
 
 includeGroovyScript('src/test/resources/scripts/ExampleIncludedScript.groovy')
 
+println 'list of stacks: ' + getStartedStackNames()
+
 stacksNames = ['HdtRegions', 'Initialize']
 
 newProperties = ['ScalingDownAdjustment' : 30]
 
 for(stackName in stacksNames) {
-	println("\nprocessing stack: ${stackName}")
-	listStackParameters(stackName)
+	println "processing stack: ${stackName} parameters: " + getStackParameters(stackName)
 	updateStackParameters(stackName, newProperties)
 }
 

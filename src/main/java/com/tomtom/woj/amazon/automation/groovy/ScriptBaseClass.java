@@ -25,7 +25,6 @@ public abstract class ScriptBaseClass extends Script {
 	public void includeGroovyScript(String scriptFileName) throws IOException {
 		GroovyShell groovyShell = (GroovyShell) getProperty(GROOVY_SHELL_PROPERTY_NAME);
 		groovyShell.evaluate(new File(scriptFileName));
-		
 	}
 	
 	public Object loadJsonFile(String jsonFileName) throws FileNotFoundException {
@@ -71,20 +70,14 @@ public abstract class ScriptBaseClass extends Script {
 		executor.deleteStack(stackName);
 	}
 	
-	public void listStacks() {
+	public List<String> getStartedStackNames() {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
-		List<String> names = executor.getStartedStackNames();
-		for(String name : names) {
-			System.out.println(name);
-		}
+		return executor.getStartedStackNames();
 	}
 	
-	public void listStackParameters(String stackName) {
+	public Map<String, String> getStackParameters(String stackName) {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
-		Map<String, String> parameters = executor.getStackParameters(stackName);
-    	for(Entry<String, String> entry : parameters.entrySet()) {
-    		System.out.println(entry.getKey() + " : " + entry.getValue());
-    	}
+		return executor.getStackParameters(stackName);
 	}
 	
 	public void updateStackParameters(String stackName, Map<String, Object> newParameterValues) {
@@ -99,4 +92,17 @@ public abstract class ScriptBaseClass extends Script {
 		}
 		return output;
 	}
+	
+	public void printList(List<Object> list) {
+		for(Object item : list) {
+			System.out.println(item);
+		}
+	}
+	
+	public void printMap(Map<String, Object> map) {
+    	for(Entry<String, Object> entry : map.entrySet()) {
+    		System.out.println(entry.getKey() + " : " + entry.getValue());
+    	}
+	}
+
 }
