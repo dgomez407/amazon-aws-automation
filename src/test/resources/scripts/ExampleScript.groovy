@@ -5,11 +5,11 @@ import java.util.Map;
  * available commands:
  * 
  * void loadAwsCredentialsFile(String credentialsFileName) 
- * 
  * void includeGroovyScript(String scriptFileName)
+ * Object loadJsonFile(String jsonFileName)
  * 
- * void createStackFromFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
- * void createStackFromString(String stackName, String templateBody, Map<String, Object> parameterValues)
+ * void createStackFile(String stackName, String templateFileName, Map<String, Object> parameterValues)
+ * void createStackText(String stackName, String templateBody, Map<String, Object> parameterValues)
  * String getStackTemplateBody(String stackName)
  * void deleteStack(String stackName)
  * List<String> getStartedStackNames()
@@ -17,7 +17,7 @@ import java.util.Map;
  * void updateStackParameters(String stackName, Map<String, Object> newParameterValues)
  * 
  */
- 
+
 println 'script arguments: ' + args
 
 json = loadJsonFile('src/test/resources/json/example_json_file.json')
@@ -37,4 +37,3 @@ for(stackName in stacksNames) {
 	println "processing stack: ${stackName} parameters: " + getStackParameters(stackName)
 	updateStackParameters(stackName, newProperties)
 }
-

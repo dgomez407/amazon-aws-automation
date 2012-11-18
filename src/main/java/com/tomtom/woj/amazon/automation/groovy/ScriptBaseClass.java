@@ -21,17 +21,12 @@ public abstract class ScriptBaseClass extends Script {
 	public static final String GROOVY_SHELL_PROPERTY_NAME = "shell";
 	public static final String ARGS_VARIABLE_NAME = "args";
 	public static final String IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME = "ignoreCredentialsCommand";
-	
+
 	public void includeGroovyScript(String scriptFileName) throws IOException {
 		GroovyShell groovyShell = (GroovyShell) getProperty(GROOVY_SHELL_PROPERTY_NAME);
 		groovyShell.evaluate(new File(scriptFileName));
 	}
-	
-	public Object loadJsonFile(String jsonFileName) throws FileNotFoundException {
-		JsonSlurper slurper = new groovy.json.JsonSlurper();
-		return slurper.parse(new FileReader(jsonFileName));
-	}
-	
+
 	public void loadAwsCredentialsFile(String credentialsFileName) {
 		boolean ignoreCredentialsCommand = (Boolean) getProperty(IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME);
 		if(ignoreCredentialsCommand) {
@@ -42,17 +37,27 @@ public abstract class ScriptBaseClass extends Script {
 		executor.loadAwsCredentialsFile(credentialsFileName);
 	}
 
-	public void createStackFromFile(String stackName, String templateFileName,
+	public Object loadJsonText(String text) {
+		JsonSlurper slurper = new groovy.json.JsonSlurper();
+		return slurper.parseText(text);
+	}
+
+	public Object loadJsonFile(String jsonFileName) throws FileNotFoundException {
+		JsonSlurper slurper = new groovy.json.JsonSlurper();
+		return slurper.parse(new FileReader(jsonFileName));
+	}
+	
+	public void createStackText(String stackName, String templateBody,
+			Map<String, Object> parameterValues) {
+		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
+		executor.createStack(stackName, templateBody, convertMapObjectToString(parameterValues));
+	}
+	
+	public void createStackFile(String stackName, String templateFileName,
 			Map<String, Object> parameterValues) throws IOException {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
 		File templateFile = new File(templateFileName);
 		executor.createStack(stackName, templateFile, convertMapObjectToString(parameterValues));
-	}
-	
-	public void createStackFromString(String stackName, String templateBody,
-			Map<String, Object> parameterValues) {
-		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
-		executor.createStack(stackName, templateBody, convertMapObjectToString(parameterValues));
 	}
 	
 	public String getStackStatus(String stackName) {
