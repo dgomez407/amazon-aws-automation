@@ -99,6 +99,11 @@ public abstract class ScriptBaseClass extends Script {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
 		return executor.getStackParameters(stackName);
 	}
+
+	public Map<String, String> getStackTags(String stackName) {
+		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);
+		return executor.getStackTags(stackName);
+	}
 	
 	public void updateStackParameters(String stackName, Map<String, Object> newParameterValues) {
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_EXECUTOR_PROPERTY_NAME);

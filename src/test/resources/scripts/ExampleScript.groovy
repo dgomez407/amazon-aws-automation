@@ -16,6 +16,7 @@ import java.util.Map;
  * Map<String, String> getStackOutputs(String stackName)
  * List<String> getStackCapabilities(String stackName)
  * Map<String, String> getStackResourceIds(String stackName) {
+ * Map<String, String> getStackTags(String stackName) {
  * String getStackTemplateBody(String stackName)
  * Map<String, String> getStackParameters(String stackName)
  * void updateStackParameters(String stackName, Map<String, Object> newParameterValues)

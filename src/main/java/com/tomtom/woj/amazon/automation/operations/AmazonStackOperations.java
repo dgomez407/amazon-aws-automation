@@ -30,6 +30,7 @@ import com.amazonaws.services.cloudformation.model.Parameter;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.cloudformation.model.StackResourceSummary;
 import com.amazonaws.services.cloudformation.model.StackSummary;
+import com.amazonaws.services.cloudformation.model.Tag;
 import com.amazonaws.services.cloudformation.model.UpdateStackRequest;
 
 public class AmazonStackOperations {
@@ -199,6 +200,23 @@ public class AmazonStackOperations {
 //		return map;
 	}
 
+	public Map<String, String> getStackTags(String stackName) {
+		checkIfCredentialsFileIsSpecified();
+		
+		DescribeStacksRequest describeStacksRequest = new DescribeStacksRequest();
+		describeStacksRequest.setStackName(stackName);
+		DescribeStacksResult describeStacksResult = client
+				.describeStacks(describeStacksRequest);
+		List<Stack> stacks = describeStacksResult.getStacks();
+		Stack stack = stacks.get(0);
+		List<Tag> tags = stack.getTags();
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (Tag tag : tags) {
+			map.put(tag.getKey(), tag.getValue());
+		}
+		return map;
+	}
+	
 	public void updateStackParameters(String stackName,
 			Map<String, String> newParameterValues) {
 		checkIfCredentialsFileIsSpecified();
