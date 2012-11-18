@@ -23,12 +23,15 @@ import com.amazonaws.services.cloudformation.model.DescribeStacksRequest;
 import com.amazonaws.services.cloudformation.model.DescribeStacksResult;
 import com.amazonaws.services.cloudformation.model.GetTemplateRequest;
 import com.amazonaws.services.cloudformation.model.GetTemplateResult;
+import com.amazonaws.services.cloudformation.model.ListStackResourcesRequest;
+import com.amazonaws.services.cloudformation.model.ListStackResourcesResult;
 import com.amazonaws.services.cloudformation.model.ListStacksRequest;
 import com.amazonaws.services.cloudformation.model.ListStacksResult;
 import com.amazonaws.services.cloudformation.model.Output;
 import com.amazonaws.services.cloudformation.model.Parameter;
 import com.amazonaws.services.cloudformation.model.Stack;
 import com.amazonaws.services.cloudformation.model.StackResource;
+import com.amazonaws.services.cloudformation.model.StackResourceSummary;
 import com.amazonaws.services.cloudformation.model.StackSummary;
 import com.amazonaws.services.cloudformation.model.UpdateStackRequest;
 
@@ -177,16 +180,26 @@ public class AmazonStackOperations {
 
 	public Map<String, String> getStackResourceIds(String stackName) {
 		checkIfCredentialsFileIsSpecified();
-
-		DescribeStackResourcesRequest describeStackResourcesRequest = new DescribeStackResourcesRequest();
-		describeStackResourcesRequest.setStackName(stackName);
-		DescribeStackResourcesResult describeStackResourcesResult = client.describeStackResources(describeStackResourcesRequest);
-		List<StackResource> resources = describeStackResourcesResult.getStackResources();
+		
+		ListStackResourcesRequest listStackResourcesRequest = new ListStackResourcesRequest();
+		listStackResourcesRequest.setStackName(stackName);
+		ListStackResourcesResult resources = client.listStackResources(listStackResourcesRequest);
+		List<StackResourceSummary> summaries = resources.getStackResourceSummaries();
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		for (StackResource resource : resources) {
-			map.put(resource.getLogicalResourceId(), resource.getPhysicalResourceId());
+		for (StackResourceSummary summary : summaries) {
+			map.put(summary.getLogicalResourceId(), summary.getPhysicalResourceId());
 		}
 		return map;
+
+//		DescribeStackResourcesRequest describeStackResourcesRequest = new DescribeStackResourcesRequest();
+//		describeStackResourcesRequest.setStackName(stackName);
+//		DescribeStackResourcesResult describeStackResourcesResult = client.describeStackResources(describeStackResourcesRequest);
+//		List<StackResource> resources = describeStackResourcesResult.getStackResources();
+//		Map<String, String> map = new LinkedHashMap<String, String>();
+//		for (StackResource resource : resources) {
+//			map.put(resource.getLogicalResourceId(), resource.getPhysicalResourceId());
+//		}
+//		return map;
 	}
 
 	public void updateStackParameters(String stackName,
