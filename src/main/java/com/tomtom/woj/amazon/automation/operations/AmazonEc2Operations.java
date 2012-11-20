@@ -19,7 +19,9 @@ import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Image;
+import com.amazonaws.services.ec2.model.ImageState;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceState;
 import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
@@ -61,7 +63,7 @@ public class AmazonEc2Operations {
 		Instance instance = instances.get(0);
 		String instanceId = instance.getInstanceId();
 		
-		waitForInstanceOperationToComplete(instanceId);
+		waitForInstanceOperationToComplete(instanceId, "running");
 		
 		return instanceId;
 	}
@@ -71,7 +73,7 @@ public class AmazonEc2Operations {
 		stopInstancesRequest.withInstanceIds(instanceId);
 		client.stopInstances(stopInstancesRequest);
 		
-		waitForInstanceOperationToComplete(instanceId);
+		waitForInstanceOperationToComplete(instanceId, "stopped");
 	}
 	
 	public void terminateInstance(String instanceId) {
@@ -79,7 +81,7 @@ public class AmazonEc2Operations {
 		terminateInstancesRequest.withInstanceIds(instanceId);
 		client.terminateInstances(terminateInstancesRequest);
 		
-		waitForInstanceOperationToComplete(instanceId);
+		waitForInstanceOperationToComplete(instanceId, "terminated");
 	}
 	
 	public String getInstanceState(String instanceId) {
@@ -103,7 +105,6 @@ public class AmazonEc2Operations {
 	
 	public void tagInstance(String instanceId, Map<String,String> tags) {
 		tagResource(instanceId, tags);
-		waitForInstanceOperationToComplete(instanceId);
 	}
 	
 	public String createAmiFromInstance(String instanceId, String name, boolean noReboot) {
@@ -114,7 +115,7 @@ public class AmazonEc2Operations {
 		CreateImageResult createImageResult = client.createImage(createImageRequest);
 		String imageId = createImageResult.getImageId();
 		
-		waitForImageOperationToComplete(imageId);
+		waitForImageOperationToComplete(imageId, ImageState.Available.toString());
 		
 		return imageId;
 	}
@@ -122,7 +123,7 @@ public class AmazonEc2Operations {
 	public void deregisterImage(String imageId) {
 		DeregisterImageRequest deregisterImageRequest = new DeregisterImageRequest(imageId);
 		client.deregisterImage(deregisterImageRequest);
-		waitForImageOperationToComplete(imageId);
+		waitForImageOperationToComplete(imageId, ImageState.Deregistered.toString());
 	}
 
 	public String getImageState(String imageId) {
@@ -135,7 +136,6 @@ public class AmazonEc2Operations {
 	
 	public void tagImage(String imageId, Map<String,String> tags) {
 		tagResource(imageId, tags);
-		waitForImageOperationToComplete(imageId);
 	}
 	
 	private void tagResource(String imageId, Map<String, String> tags) {
@@ -150,10 +150,10 @@ public class AmazonEc2Operations {
 		client.createTags(createTagsRequest);
 	}
 	
-	private void waitForImageOperationToComplete(String imageId) {
+	private void waitForInstanceOperationToComplete(String instanceId, String desiredState) {
 	}
 
-	private void waitForInstanceOperationToComplete(String instanceId) {
+	private void waitForImageOperationToComplete(String imageId, String desiredState) {
 	}
 
 }
