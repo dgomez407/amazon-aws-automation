@@ -33,7 +33,7 @@ public abstract class ScriptBaseClass extends Script {
 	public void loadAwsCredentialsFile(String credentialsFileName) {
 		boolean ignoreCredentialsCommand = (Boolean) getProperty(IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME);
 		if(ignoreCredentialsCommand) {
-			System.out.println("ignored load credentials command");
+			System.out.println("ignored load credentials command because they are overriden with --credentials comand line parameter");
 			return;
 		}
 		AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_STACK_OPERATIONS_PROPERTY_NAME);
