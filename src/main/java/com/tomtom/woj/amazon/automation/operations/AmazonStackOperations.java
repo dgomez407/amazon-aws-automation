@@ -311,7 +311,7 @@ public class AmazonStackOperations {
 		return false;
 	}
 
-	private AWSCredentials loadCredentials(String path) {
+	public static AWSCredentials loadCredentials(String path) {
 		File credentialsFile = new File(path);
 		AWSCredentials creds = null;
 		try {

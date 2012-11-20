@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.CreateImageRequest;
 import com.amazonaws.services.ec2.model.CreateImageResult;
@@ -29,7 +30,21 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 
 public class AmazonEc2Operations {
 	
-	AmazonEC2Client client = new AmazonEC2Client();
+	private AmazonEC2Client client;
+	
+	public AmazonEc2Operations(String awsCredentialsFileName) {
+		AWSCredentials credentials = AmazonStackOperations.loadCredentials(awsCredentialsFileName);
+		client = new AmazonEC2Client(credentials);
+	}
+
+	public AmazonEc2Operations() {
+		client = new AmazonEC2Client();
+	}
+
+	public void loadAwsCredentialsFile(String awsCredentialsFileName) {
+		AWSCredentials credentials = AmazonStackOperations.loadCredentials(awsCredentialsFileName);
+		client = new AmazonEC2Client(credentials);
+	}
 	
 	public String runInstance(String imageId, String instanceType, String userData, String keyPairName, ArrayList<String> securityGroupIds) {
 		RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
@@ -140,4 +155,5 @@ public class AmazonEc2Operations {
 
 	private void waitForInstanceOperationToComplete(String instanceId) {
 	}
+
 }
