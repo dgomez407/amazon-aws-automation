@@ -12,6 +12,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 
 import com.tomtom.woj.amazon.automation.operations.AmazonEc2Operations;
 import com.tomtom.woj.amazon.automation.operations.AmazonStackOperations;
+import com.tomtom.woj.amazon.automation.operations.InstanceOperations;
 
 public class GroovyScriptExecutor {
 
@@ -42,8 +43,10 @@ public class GroovyScriptExecutor {
 			binding.setProperty(ScriptBaseClass.IGNORE_CREDENTIALS_COMMAND_PROPERTY_NAME, false);
 		}
 
+		InstanceOperations instanceOperations = new InstanceOperations();
 		binding.setProperty(ScriptBaseClass.AMAZON_STACK_OPERATIONS_PROPERTY_NAME, amazonExecutor);
 		binding.setProperty(ScriptBaseClass.AMAZON_EC2_OPERATIONS_PROPERTY_NAME, amazonEc2Operations);
+		binding.setProperty(ScriptBaseClass.INSTANCE_OPERATIONS, instanceOperations);
 		binding.setVariable(ScriptBaseClass.ARGS_VARIABLE_NAME, args);
 		
 		CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
