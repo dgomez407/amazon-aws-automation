@@ -45,6 +45,13 @@ public abstract class ScriptBaseClass extends Script {
         ec2Operations.loadAwsCredentialsFile(credentialsFileName);
     }
 
+    public void setRegionName(String regionName) {
+        AmazonStackOperations executor = (AmazonStackOperations) getProperty(AMAZON_STACK_OPERATIONS_PROPERTY_NAME);
+        AmazonEc2Operations ec2Operations = (AmazonEc2Operations) getProperty(AMAZON_EC2_OPERATIONS_PROPERTY_NAME);
+        executor.setRegionName(regionName);
+        ec2Operations.setRegionName(regionName);
+    }
+
     public Object loadJsonText(String text) {
         JsonSlurper slurper = new groovy.json.JsonSlurper();
         return slurper.parseText(text);

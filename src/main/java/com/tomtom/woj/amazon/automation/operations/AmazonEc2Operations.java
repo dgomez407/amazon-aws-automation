@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.CreateImageRequest;
 import com.amazonaws.services.ec2.model.CreateImageResult;
@@ -58,6 +60,12 @@ public class AmazonEc2Operations {
         AWSCredentials credentials = AmazonStackOperations.loadCredentials(awsCredentialsFileName);
         client = new AmazonEC2Client(credentials);
     }
+
+	public void setRegionName(String regionName) {
+		Regions regions = Regions.fromName(regionName);
+		Region region = Region.getRegion(regions);
+		client.setRegion(region);
+	}
 
     public String runInstance(String imageId, String instanceType, String userData, String keyPairName,
             ArrayList<String> securityGroupIds) {

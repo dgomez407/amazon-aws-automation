@@ -14,6 +14,8 @@ import org.apache.commons.io.FileUtils;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
 import com.amazonaws.services.cloudformation.model.CreateStackRequest;
 import com.amazonaws.services.cloudformation.model.DeleteStackRequest;
@@ -49,6 +51,12 @@ public class AmazonStackOperations {
 	public void loadAwsCredentialsFile(String credentialsFileName) {
 		AWSCredentials credentials = loadCredentials(credentialsFileName);
 		client = new AmazonCloudFormationClient(credentials);
+	}
+
+	public void setRegionName(String regionName) {
+		Regions regions = Regions.fromName(regionName);
+		Region region = Region.getRegion(regions);
+		client.setRegion(region);
 	}
 
 	public void createStack(String stackName, File templateFile,
