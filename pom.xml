@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.tomtom.woj</groupId>
 	<artifactId>amazon-aws-automation</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.2</version>
 	<name>Amazon AWS Automation</name>
 	<description>Automate Amazon AWS tasks related to releases and continuous delivery.</description>
 	<url>http://code.google.com/p/amazon-aws-automation/</url>
@@ -28,9 +28,9 @@
 		<url>http://code.google.com/p/amazon-aws-automation/issues/list</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:http://amazon-aws-automation.googlecode.com/svn/trunk</connection>
-		<developerConnection>scm:svn:https://amazon-aws-automation.googlecode.com/svn/trunk</developerConnection>
-		<url>http://code.google.com/p/amazon-aws-automation/source/browse/</url>
+		<connection>scm:svn:http://amazon-aws-automation.googlecode.com/svn/tags/amazon-aws-automation-0.2</connection>
+		<developerConnection>scm:svn:https://amazon-aws-automation.googlecode.com/svn/tags/amazon-aws-automation-0.2</developerConnection>
+		<url>http://code.google.com/p/amazon-aws-automation/source/browse/tags/amazon-aws-automation-0.2</url>
 	</scm>
 	<dependencies>
 		<dependency>
